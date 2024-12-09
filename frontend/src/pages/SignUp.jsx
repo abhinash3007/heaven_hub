@@ -59,7 +59,6 @@ const SignUp = () => {
               onChange={handleChange}
               required
             />
-            <label htmlFor="userName" className="absolute top-2 left-3 text-gray-400 transition-all duration-200">Username</label>
           </div>
           <div className="relative">
             <input
@@ -71,7 +70,6 @@ const SignUp = () => {
               onChange={handleChange}
               required
             />
-            <label htmlFor="email" className="absolute top-2 left-3 text-gray-400 transition-all duration-200">Email</label>
           </div>
           <div className="relative">
             <input
@@ -83,7 +81,6 @@ const SignUp = () => {
               onChange={handleChange}
               required
             />
-            <label htmlFor="password" className="absolute top-2 left-3 text-gray-400 transition-all duration-200">Password</label>
           </div>
           <button
             disabled={loading}
