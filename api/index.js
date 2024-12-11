@@ -8,26 +8,15 @@ const listingRouter=require("./routes/listingRouter");
 const cookieParser=require("cookie-parser");
 const path=require("path");
 dotenv.config();
-// mongoose.connect(`${process.env.MONGO}/heaven_hub`).then(()=>{
-//     console.log("connected to db");
-// })
-// .catch((err)=>{
-//     console.log(err);
-// })
-console.log('MONGO env variable:', process.env.MONGO);
-
-mongoose.connect(process.env.MONGO, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  authSource: 'admin'
-})
-.then(()=>{
+mongoose.connect(`${process.env.MONGO}`).then(()=>{
     console.log("connected to db");
 })
 .catch((err)=>{
-    console.error('Error connecting to MongoDB:', err);
-    process.exit(1); // Exit the process with a non-zero status code
-});
+    console.log(err);
+})
+console.log('MONGO env variable:', process.env.MONGO);
+
+
 
 const currentDir = path.resolve();
 
@@ -66,3 +55,4 @@ app.use((err,req,res,next)=>{
         message,
     })
 });
+module.exports=app;
