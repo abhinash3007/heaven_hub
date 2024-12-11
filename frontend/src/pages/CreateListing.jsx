@@ -108,7 +108,7 @@ const CreateListing = () => {
         return setError('Discount price must be lower than regular price');
       setLoading(true);
       setError('');
-      const res = await fetch('/api/listing/create', {
+      const res = await fetch('https://heaven-hub-zn7r.vercel.app/api/listing/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

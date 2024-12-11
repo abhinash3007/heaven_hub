@@ -44,7 +44,7 @@ const Search = () => {
             setLoading(true);
             urlParams.set('limit', 6);
             const searchQuery = urlParams.toString();
-            const res = await fetch(`/api/listing/get?${searchQuery}`);
+            const res = await fetch(`https://heaven-hub-zn7r.vercel.app/api/listing/get?${searchQuery}`);
             const data = await res.json();
             setShowMore(data.length > 5);
             setListing(data);
@@ -83,7 +83,7 @@ const Search = () => {
         urlParams.set('startIndex', startIndex);
         urlParams.set('limit', 6);
         const searchQuery = urlParams.toString();
-        const res = await fetch(`/api/listing/get?${searchQuery}`);
+        const res = await fetch(`https://heaven-hub-zn7r.vercel.app/api/listing/get?${searchQuery}`);
         const data = await res.json();
         setShowMore(data.length === 6);
         setListing([...listing, ...data]);

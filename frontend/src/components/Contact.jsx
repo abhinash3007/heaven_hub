@@ -9,7 +9,7 @@ const Contact = ({ listing }) => {
     useEffect(() => {
         const fetchLandLord = async () => {
             try {
-                const res = await fetch(`/api/user/${listing.userRef}`);
+                const res = await fetch(`https://heaven-hub-zn7r.vercel.app/api/user/${listing.userRef}`);
                 const data = await res.json();
                 setLandlord(data);
             } catch (error) {
