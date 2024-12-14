@@ -23,6 +23,7 @@ const currentDir = path.resolve();
 const app=express();
 const cors = require('cors');
 app.use(cors({
+  credentials: true ,// Allow credentials
   origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
