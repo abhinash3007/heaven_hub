@@ -1,11 +1,12 @@
 const express=require('express');
 const {createListing,deleteListing,updateListing,getListing,getListings}=require('../controllers/listingController');
-const {veifyToken}=require('../utils/verifyUser')
-const route=express.Router();
+const { verifyToken } = require('../utils/verifyUser');
 
-route.post('/create',veifyToken , createListing);
-route.delete('/delete/:id',veifyToken , deleteListing);
-route.post('/update/:id',veifyToken , updateListing);
+const route=express.Router();
+route.post('/create/', verifyToken, createListing);
+route.delete('/delete/:id', verifyToken, deleteListing);
+route.post('/update/:id', verifyToken, updateListing);
+
 route.get('/get/:id' , getListing);
 route.get('/get' , getListings);
 

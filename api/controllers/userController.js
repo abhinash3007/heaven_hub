@@ -19,33 +19,33 @@ module.exports.updateUserInfo = async (req, res, next) => {
             },
         }, { new: true });
         const { password, ...rest } = updateUserInfo._doc;
-        res.status(200).json(rest);
+        res.status(200).json({ success: true, ...rest });
     } catch (err) {
         next(err);
     }
 }
 module.exports.deleteUser = async (req, res, next) => {
     if (req.user.id !== req.params.id) {
-        return next(errorHandler(401, "You can only update your own account"));
+        return next(errorHandler(401, "You can only delete your own account"));
     }
+    
     try {
         await User.findByIdAndDelete(req.params.id);
         res.clearCookie("access_token");
-        res.status(200).json('User has been deleted')
+        res.status(200).json({ success: true, message: 'User has been deleted' });
     } catch (error) {
         next(error);
     }
 }
 module.exports.getUserListing = async (req, res, next) => {
-    if (req.user.id === req.params.id) {
-        try {
-            const listing = await Listing.find({ userRef: req.params.id })
-            res.status(200).json(listing);
-        } catch (error) {
-            next(error);
-        }
-    } else {
+    if (req.user.id !== req.params.id) {
         return next(errorHandler(401, 'You can only view your own listing'));
+    }
+    try {
+        const listing = await Listing.find({ userRef: req.params.id })
+        res.status(200).json({ success: true, listing });
+    } catch (error) {
+        next(error);
     }
 }
 module.exports.getUser = async (req, res, next) => {
@@ -55,7 +55,7 @@ module.exports.getUser = async (req, res, next) => {
             return next(errorHandler(404, 'User not found'));
         }
         const { password: pass, ...rest } = user._doc;
-        res.status(200).json(rest);
+        res.status(200).json({ success: true, ...rest });
     } catch (error) {
         next(error);
     }

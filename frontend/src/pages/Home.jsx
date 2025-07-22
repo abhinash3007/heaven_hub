@@ -25,9 +25,9 @@ const Home = () => {
         const rents = await rentRes.json();
         const sales = await saleRes.json();
 
-        setOfferListing(offers);
-        setRentListing(rents);
-        setSaleListing(sales);
+        setOfferListing(offers.listings || []);
+        setRentListing(rents.listings || []);
+        setSaleListing(sales.listings || []);
       } catch (error) {
         console.log(error);
       }

@@ -18,6 +18,7 @@ const Oath = () => {
       const res = await fetch("https://heaven-hub-zn7r.vercel.app/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify({
           name: result.user.displayName,
           email: result.user.email,
@@ -25,8 +26,9 @@ const Oath = () => {
         }),
       });
       const data = await res.json();
-      if (!data.success) {
-        throw new Error(data.message);
+      if (!res.ok || data.error || data.success === false) {
+        setErrorMessage(data.message || data.error || 'Google sign in failed');
+        return;
       }
       dispatch(signInSuccess(data));
       navigate("/");

@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Oath from '../components/Oath';
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ userName: '', email: '', password: '' });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -25,6 +25,7 @@ const SignUp = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(formData),
       });
       const data = await res.json();
@@ -55,7 +56,7 @@ const SignUp = () => {
               placeholder="Username"
               className="border rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               id="userName"
-              value={formData.userName}
+              value={formData.userName || ''}
               onChange={handleChange}
               required
             />
@@ -66,7 +67,7 @@ const SignUp = () => {
               placeholder="Email"
               className="border rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               id="email"
-              value={formData.email}
+              value={formData.email || ''}
               onChange={handleChange}
               required
             />
@@ -77,7 +78,7 @@ const SignUp = () => {
               placeholder="Password"
               className="border rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               id="password"
-              value={formData.password}
+              value={formData.password || ''}
               onChange={handleChange}
               required
             />

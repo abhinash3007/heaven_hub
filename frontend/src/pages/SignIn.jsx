@@ -1,16 +1,21 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
+import { signInStart, signInSuccess, signInFailure, clearError } from '../redux/user/userSlice';
 import Oath from '../components/Oath';
 
 const SignIn = () => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const { error, loading } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // Clear any existing error when component mounts
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setFormData({
@@ -28,12 +33,15 @@ const SignIn = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
+      console.log('SignIn Response:', data);
+      console.log('Response Status:', res.status);
+      
+      if (!res.ok || data.error || data.success === false) {
+        dispatch(signInFailure(data.message || data.error || 'Sign in failed'));
         return;
       }
       dispatch(signInSuccess(data));
@@ -55,7 +63,7 @@ const SignIn = () => {
               placeholder="Email"
               className="border rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               id="email"
-              value={formData.email}
+              value={formData.email || ''}
               onChange={handleChange}
               required
             />
@@ -66,7 +74,7 @@ const SignIn = () => {
               placeholder="Password"
               className="border rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               id="password"
-              value={formData.password}
+              value={formData.password || ''}
               onChange={handleChange}
               required
             />

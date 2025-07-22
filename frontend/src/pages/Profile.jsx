@@ -22,15 +22,16 @@ const Profile = () => {
   const [filePer, setFilePer] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({
-    userName: currentUser.userName,
-    email: currentUser.email,
-    avatar: currentUser.avatar,
-    password: currentUser.password,
+    userName: currentUser?.userName || '',
+    email: currentUser?.email || '',
+    avatar: currentUser?.avatar || '',
+    password: currentUser?.password || '',
   });
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showList,setShowList]=useState(true);
   const [showListingErrors, setShowListingErrors] = useState(false);
   const [userListing, setUserListing] = useState([]);
+  const [loadingListings, setLoadingListings] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,6 +39,17 @@ const Profile = () => {
       handleFileUpload(file);
     }
   }, [file]);
+
+  useEffect(() => {
+    if (currentUser) {
+      setFormData({
+        userName: currentUser.userName || '',
+        email: currentUser.email || '',
+        avatar: currentUser.avatar || '',
+        password: currentUser.password || '',
+      });
+    }
+  }, [currentUser]);
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
@@ -77,6 +89,7 @@ const Profile = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(formData),
       });
       const data = await res.json();
@@ -97,6 +110,7 @@ const Profile = () => {
       dispatch(deleteUserStart());
       const res = await fetch(`https://heaven-hub-zn7r.vercel.app/api/user/delete/${currentUser._id}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
       const data = await res.json();
       if (data.success === false) {
@@ -112,7 +126,9 @@ const Profile = () => {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch('https://heaven-hub-zn7r.vercel.app/api/auth/signout');
+      const res = await fetch('https://heaven-hub-zn7r.vercel.app/api/auth/signout', {
+        credentials: 'include',
+      });
       const data = await res.json();
       if (data.success === false) {
         dispatch(deleteUserFailure(data.message));
@@ -120,40 +136,54 @@ const Profile = () => {
       }
       dispatch(deleteUserSuccess(data));
     } catch (error) {
-      dispatch(deleteUserFailure(data.message));
+      dispatch(deleteUserFailure(error.message));
     }
   };
   const handleShowListings = async () => {
     try {
       setShowList(false);
       setShowListingErrors(false);
-      const res = await fetch(`https://heaven-hub-zn7r.vercel.app/api/user/listings/${currentUser._id}`);
+      setLoadingListings(true);
+      
+      const res = await fetch(`https://heaven-hub-zn7r.vercel.app/api/user/listings/${currentUser._id}`,{
+        method: 'GET',
+        credentials: 'include'
+      });
+
       const data = await res.json();
       if (data.success === false) {
         setShowListingErrors(true);
         setShowList(true);
         return;
       }
-      setUserListing(data);
+      
+      // Set the listings (even if empty array)
+      setUserListing(data || []);
       setShowList(false);
 
     } catch (error) {
       setShowListingErrors(true);
+      setShowList(true);
+    } finally {
+      setLoadingListings(false);
     }
   }
   const handleDeleteListing = async (listingId) => {
     try {
       const res = await fetch(`https://heaven-hub-zn7r.vercel.app/api/listing/delete/${listingId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include',
       });
       const data = await res.json();
-      if (data.success == false) {
+      if (data.success === false) {
         return;
       }
       setUserListing((prev) => prev.filter((listing) => listing._id !== listingId));
-    } catch (error) {
-
+     }
+      catch (error) {
+      console.error('Failed to delete listing:', error);
     }
+    
   }
   return (
     <div className='p-3 pt-32 max-w-lg mx-auto'>
@@ -169,7 +199,7 @@ const Profile = () => {
         <img
           onClick={() => fileRef.current.click()}
           className='rounded-full self-center h-24 w-24'
-          src={formData.avatar || currentUser.avatar}
+          src={formData.avatar || currentUser?.avatar || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
           alt='profile'
         />
         <p>
@@ -235,25 +265,53 @@ const Profile = () => {
         {updateSuccess ? 'User is updated successfully!' : ''}
       </p>
       {showList && (
-        <button onClick={handleShowListings} className='w-full text-green-600'>Show Listings</button>
+        <button 
+          onClick={handleShowListings} 
+          disabled={loadingListings}
+          className='w-full text-green-600 disabled:opacity-50'
+        >
+          {loadingListings ? 'Loading...' : 'Show Listings'}
+        </button>
       )}
-      <p>{showListingErrors ? 'Some error occured' : ''}</p>
-      {userListing && userListing.length > 0 &&
+      <p>{showListingErrors ? 'Some error occurred' : ''}</p>
+      {!showList && (
         <div className='flex flex-col gap-4'>
           <h1 className='text-center mt-7 text-2xl font-bold'>Your Listings</h1>
-          {userListing.map((listing) => (
-            <div key={listing._id} className='border rounded-lg p-3 flex justify-between items-center gap-4'>
-              <Link to={`/listing/${listing._id}`}>
-                <img src={listing.imageUrls[0]} alt='listing-cover' className='w-16 h-16 object-contain'></img></Link>
-              <Link to={`/listing/${listing._id}`} className='text-slate-600 font-semibold flex-1 hover:underline truncate'><p>{listing.name}</p></Link>
-              <div className='flex flex-row item-center gap-2'>
-                <button onClick={() => handleDeleteListing(listing._id)} className='text-red-700 uppercase p-2 rounded-lg bg-pink-200 w-full'>Delete</button>
-                <Link to={`/update-listing/${listing._id}`}><button className='text-green-700 uppercase p-2 rounded-lg bg-green-200 w-full'>Edit</button></Link>
-              </div>
+          {loadingListings ? (
+            <div className='text-center py-8'>
+              <p className='text-gray-500 text-lg'>Loading your listings...</p>
             </div>
-          ))}
+          ) : userListing && userListing.length > 0 ? (
+            userListing.map((listing) => (
+              <div key={listing._id} className='border rounded-lg p-3 flex justify-between items-center gap-4'>
+                <Link to={`/listing/${listing._id}`}>
+                  <img src={listing.imageUrls[0]} alt='listing-cover' className='w-16 h-16 object-contain'></img></Link>
+                <Link to={`/listing/${listing._id}`} className='text-slate-600 font-semibold flex-1 hover:underline truncate'><p>{listing.name}</p></Link>
+                <div className='flex flex-row item-center gap-2'>
+                  <button onClick={() => handleDeleteListing(listing._id)} className='text-red-700 uppercase p-2 rounded-lg bg-pink-200 w-full'>Delete</button>
+                  <Link to={`/update-listing/${listing._id}`}><button className='text-green-700 uppercase p-2 rounded-lg bg-green-200 w-full'>Edit</button></Link>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className='text-center py-8'>
+              <p className='text-gray-500 text-lg mb-4'>No listings found</p>
+              <p className='text-gray-400 text-sm'>You haven't created any listings yet.</p>
+              <Link to='/create-listing' className='inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200'>
+                Create Your First Listing
+              </Link>
+            </div>
+          )}
+          {!loadingListings && (
+            <button 
+              onClick={() => setShowList(true)} 
+              className='w-full text-gray-600 mt-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50'
+            >
+              Hide Listings
+            </button>
+          )}
         </div>
-      }
+      )}
     </div>
   );
 };

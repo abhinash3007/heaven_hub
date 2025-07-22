@@ -14,12 +14,14 @@ import Search from './pages/Search';
 import Heaven from './pages/Heaven';
 import Footer from './components/Footer';
 import Foundation from './pages/Foundation';
+import AuthCheck from './components/AuthCheck';
 
 const App = () => {
   const location = useLocation();
 
   return (
     <div>
+      <AuthCheck />
       <Header />
       <Routes>
         <Route path='/' element={<Heaven />} />
