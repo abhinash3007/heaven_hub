@@ -17,9 +17,9 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const offerRes = await fetch('https://heaven-hub-zn7r.vercel.app/api/listing/get?offer=true&limit=4');
-        const rentRes = await fetch('https://heaven-hub-zn7r.vercel.app/api/listing/get?type=rent&limit=4');
-        const saleRes = await fetch('https://heaven-hub-zn7r.vercel.app/api/listing/get?type=sale&limit=4');
+        const offerRes = await fetch('http://localhost:3000/api/listing/get?offer=true&limit=4');
+        const rentRes = await fetch('http://localhost:3000/api/listing/get?type=rent&limit=4');
+        const saleRes = await fetch('http://localhost:3000/api/listing/get?type=sale&limit=4');
 
         const offers = await offerRes.json();
         const rents = await rentRes.json();

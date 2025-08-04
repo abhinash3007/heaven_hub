@@ -93,13 +93,31 @@ module.exports.getListings = async (req, res, next) => {
     const sort = req.query.sort || 'createdAt';
     const order = req.query.order === 'asc' ? 1 : -1;
 
+    console.log('Search request received:', {
+      searchTerm,
+      type,
+      offer,
+      furnished,
+      parking,
+      sort,
+      order,
+      limit,
+      startIndex
+    });
+
     const filterQuery = {
-      name: { $regex: searchTerm, $options: 'i' },
+      $or: [
+        { name: { $regex: searchTerm, $options: 'i' } },
+        { description: { $regex: searchTerm, $options: 'i' } },
+        { address: { $regex: searchTerm, $options: 'i' } }
+      ],
       offer,
       furnished,
       parking,
       type,
     };
+
+    console.log('Filter query:', JSON.stringify(filterQuery, null, 2));
 
     const listings = await Listing.find(filterQuery)
       .sort({ [sort]: order })
@@ -108,8 +126,11 @@ module.exports.getListings = async (req, res, next) => {
 
     const total = await Listing.countDocuments(filterQuery);
 
+    console.log(`Found ${listings.length} listings out of ${total} total`);
+
     res.status(200).json({ success: true, total, listings });
   } catch (error) {
+    console.error('Error in getListings:', error);
     next(error);
   }
 };

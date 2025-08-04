@@ -31,6 +31,42 @@ const CreateListing = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const generateDescription = async () => {
+    try {
+      const body = {
+        type: `${formData.bedrooms}BHK`,
+        location: formData.address,
+        price: formData.regularPrice,
+        features: [
+          formData.parking && "parking",
+          formData.furnished && "furnished",
+          formData.offer && "offer",
+        ].filter(Boolean),
+      };
+
+      const res = await fetch(
+        "http://localhost:3000/api/generate-description",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+
+      const data = await res.json();
+      if (data.description) {
+        setFormData((prev) => ({
+          ...prev,
+          description: data.description,
+        }));
+      } else {
+        setError("Failed to generate description");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("AI generation failed");
+    }
+  };
 
   const handleImageSubmit = (e) => {
     e.preventDefault();
@@ -125,7 +161,7 @@ const CreateListing = () => {
         return setError("Discount price must be lower than regular price");
       setLoading(true);
       setError("");
-      const res = await fetch("https://heaven-hub-zn7r.vercel.app/api/listing/create/", {
+      const res = await fetch("http://localhost:3000/api/listing/create/", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -173,6 +209,14 @@ const CreateListing = () => {
             onChange={handleChange}
             value={formData.description}
           />
+          <button
+            type="button"
+            onClick={generateDescription}
+            className="mt-2 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200"
+          >
+            Generate Description with AI
+          </button>
+
           <input
             className="border rounded-lg p-3 focus:ring-2 focus:ring-red-600"
             type="text"

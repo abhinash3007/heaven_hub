@@ -2,10 +2,6 @@ const { errorHandler } = require("./error");
 const jwt = require("jsonwebtoken");
 
 module.exports.verifyToken = (req, res, next) => {
-    console.log('Cookies:', req.cookies);
-    console.log('Authorization Header:', req.headers.authorization);
-    console.log('Request URL:', req.url);
-    console.log('Request Method:', req.method);
 
     const token = req.cookies.access_token || req.headers.authorization?.replace('Bearer ', '');
 

@@ -5,7 +5,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://heaven-hub-zn7r.vercel.app/', 
+        target: 'https://localhost:3000/', 
         secure: false,
         changeOrigin: true,
       },

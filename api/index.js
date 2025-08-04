@@ -1,14 +1,17 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+//const dotenv = require("dotenv");
 const userRouter = require("./routes/userRouter");
 const authRouter = require("./routes/authRouter");
 const listingRouter = require("./routes/listingRouter");
+const aiRoutes = require('./routes/aiRoutes');
 
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
-dotenv.config();
+//dotenv.config();
 
 mongoose.connect(`${process.env.MONGO}`).then(() => {
     console.log("Connected to database");
@@ -25,10 +28,9 @@ const cors = require('cors');
 
 app.use(cors({
   credentials: true,
-  origin: 'http://localhost:5173', 
+  origin: "http://localhost:5173", 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['Set-Cookie'],
 }));
 
 app.use(express.json());
@@ -37,6 +39,7 @@ app.use(cookieParser());
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
+app.use('/api/ai', aiRoutes);
 
 app.use(express.static(path.join(currentDir, '/frontend/dist')));
 app.get('*', (req, res) => {

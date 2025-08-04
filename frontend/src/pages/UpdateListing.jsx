@@ -39,7 +39,7 @@ const UpdateListing = () => {
     const fetchListing = async () => {
       const listingId = params.listingId;
       const res = await fetch(
-        `https://heaven-hub-zn7r.vercel.app/api/listing/get/${listingId}`
+        `http://localhost:3000/api/listing/get/${listingId}`
       );
       const data = await res.json();
       if (data.success === false) {
@@ -125,7 +125,7 @@ const UpdateListing = () => {
       setLoading(true);
       setError(false);
       const res = await fetch(
-        `https://heaven-hub-zn7r.vercel.app/api/listing/update/${params.listingId}`,
+        `http://localhost:3000/api/listing/update/${params.listingId}`,
         {
           method: "POST",
           headers: {
