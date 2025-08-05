@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const OpenAI = require("openai");
 
-const openai = new OpenAI(); 
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+}); 
 
 
 router.post("/generate-description", async (req, res) => {
@@ -20,7 +22,11 @@ router.post("/generate-description", async (req, res) => {
     res.json({ description });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to generate description" });
+    if (err.code === 'insufficient_quota') {
+      res.status(500).json({ error: "OpenAI quota exceeded. Please try again later." });
+    } else {
+      res.status(500).json({ error: "Failed to generate description" });
+    }
   }
 });
 

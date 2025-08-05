@@ -40,7 +40,7 @@ const Header = () => {
         <form onSubmit={handleSubmit} className='bg-gray-100 p-2 rounded-lg flex items-center w-full max-w-md mt-4 sm:mt-0'>
           <input
             type='text'
-            placeholder='Search...'
+            placeholder='Search by name, address, description...'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className='bg-transparent focus:outline-none w-full p-2 rounded-l-lg'

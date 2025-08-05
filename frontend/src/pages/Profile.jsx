@@ -16,7 +16,6 @@ import { Link } from 'react-router-dom';
 const Profile = () => {
   const fileRef = useRef(null);
   const { currentUser, loading, error } = useSelector((state) => state.user);
-  console.log('User:', currentUser);
 
   const [file, setFile] = useState(undefined);
   const [filePer, setFilePer] = useState(0);
@@ -145,7 +144,7 @@ const Profile = () => {
       setShowListingErrors(false);
       setLoadingListings(true);
       
-      const res = await fetch(`http://localhost:3000/api/user/listings/${currentUser._id}`,{
+      const res = await fetch(`https://heaven-hub-2.onrender.com/api/user/listings/${currentUser._id}`,{
         method: 'GET',
         credentials: 'include'
       });
@@ -157,7 +156,6 @@ const Profile = () => {
         return;
       }
       
-      // Set the listings (even if empty array)
       setUserListing(data.listing || []);
       setShowList(false);
 

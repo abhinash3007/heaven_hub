@@ -4,7 +4,6 @@ const { errorHandler } = require("../utils/error");
 const jwt = require('jsonwebtoken');
 
 module.exports.signup = async (req, res, next) => {
-    console.log(req.body);
     const { userName, email, password } = req.body;
     if (!userName || !email || !password) {
         return res.status(400).json({ message: "All fields are required" });
@@ -39,7 +38,7 @@ module.exports.signin = async (req, res, next) => {
             httpOnly: false,
             secure: false,
             sameSite: 'lax',
-            maxAge: 24 * 60 * 60 * 1000 // 24 hours
+            maxAge: 24 * 60 * 60 * 1000 
         })
             .status(200)
             .json({ success: true, token, ...rest });
@@ -58,7 +57,7 @@ module.exports.google = async (req, res, next) => {
                 httpOnly: false,
                 secure: false,
                 sameSite: 'lax',
-                maxAge: 24 * 60 * 60 * 1000 // 24 hours
+                maxAge: 24 * 60 * 60 * 1000 
             })
                 .status(200)
                 .json({ success: true, ...rest });
@@ -72,14 +71,13 @@ module.exports.google = async (req, res, next) => {
                 avatar: req.body.photo
             });
             await newUser.save();
-            console.log(newUser);
             const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
             const { password: pass, ...rest } = newUser._doc;
             return res.cookie("access_token", token, { 
                 httpOnly: false,
                 secure: false,
                 sameSite: 'lax',
-                maxAge: 24 * 60 * 60 * 1000 // 24 hours
+                maxAge: 24 * 60 * 60 * 1000 
             })
                 .status(200)
                 .json({ success: true, ...rest });

@@ -31,7 +31,7 @@ export default function Listing() {
         const fetchListing = async () => {
             try {
                 setLoading(true);
-                const res = await fetch(`http://localhost:3000/api/listing/get/${params.listingId}`);
+                const res = await fetch(`https://heaven-hub-2.onrender.com/api/listing/get/${params.listingId}`);
                 const data = await res.json();
                 if (data.success === false) {
                     setError(true);
@@ -39,6 +39,7 @@ export default function Listing() {
                     return;
                 }
                 setListing(data);
+                
                 setLoading(false);
                 setError(false);
             } catch (error) {
@@ -87,10 +88,10 @@ export default function Listing() {
                     )}
                     <div className='bg-white rounded-lg shadow-lg p-6 my-7'>
                         <h1 className='text-3xl font-semibold'>
-                            {listing.name} - ${' '}
-                            {listing.offer
-                                ? listing.discountPrice.toLocaleString('en-US')
-                                : listing.regularPrice.toLocaleString('en-US')}
+                            {listing.name} - ₹{' '}
+                            {((listing.offer
+                                ? listing.discountPrice
+                                : listing.regularPrice) * 85).toLocaleString('en-IN')}
                             {listing.type === 'rent' && ' / month'}
                         </h1>
                         <p className='flex items-center mt-4 gap-2 text-gray-700 text-sm'>
@@ -103,7 +104,7 @@ export default function Listing() {
                             </span>
                             {listing.offer && (
                                 <span className='bg-green-600 w-full max-w-[200px] text-white text-center p-2 rounded-md'>
-                                    ${+listing.regularPrice - +listing.discountPrice} OFF
+                                    ₹{((+listing.regularPrice - +listing.discountPrice) * 85).toLocaleString('en-IN')} OFF
                                 </span>
                             )}
                         </div>

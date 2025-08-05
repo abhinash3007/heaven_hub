@@ -2,7 +2,6 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
-//const dotenv = require("dotenv");
 const userRouter = require("./routes/userRouter");
 const authRouter = require("./routes/authRouter");
 const listingRouter = require("./routes/listingRouter");
@@ -11,7 +10,6 @@ const aiRoutes = require('./routes/aiRoutes');
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
-//dotenv.config();
 
 mongoose.connect(`${process.env.MONGO}`).then(() => {
     console.log("Connected to database");
@@ -41,6 +39,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
 app.use('/api/ai', aiRoutes);
 
+
 app.use(express.static(path.join(currentDir, '/frontend/dist')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(currentDir, 'frontend', 'dist', 'index.html'));
@@ -49,7 +48,6 @@ app.get('*', (req, res) => {
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-    console.error('Error:', err);
     res.status(statusCode).json({
         success: false,
         statusCode,

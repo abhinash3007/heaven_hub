@@ -31,6 +31,7 @@ const CreateListing = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
   const generateDescription = async () => {
     try {
       const body = {
@@ -45,7 +46,7 @@ const CreateListing = () => {
       };
 
       const res = await fetch(
-        "http://localhost:3000/api/generate-description",
+        "https://heaven-hub-2.onrender.com/api/generate-description",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -159,9 +160,11 @@ const CreateListing = () => {
         return setError("You must upload at least one image");
       if (+formData.regularPrice < +formData.discountPrice)
         return setError("Discount price must be lower than regular price");
+      
       setLoading(true);
       setError("");
-      const res = await fetch("http://localhost:3000/api/listing/create/", {
+      
+      const res = await fetch("https://heaven-hub-2.onrender.com/api/listing/create/", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -217,15 +220,17 @@ const CreateListing = () => {
             Generate Description with AI
           </button>
 
-          <input
-            className="border rounded-lg p-3 focus:ring-2 focus:ring-red-600"
-            type="text"
-            placeholder="Address"
-            id="address"
-            required
-            onChange={handleChange}
-            value={formData.address}
-          />
+          <div>
+            <input
+              className="border rounded-lg p-3 focus:ring-2 focus:ring-red-600 w-full"
+              type="text"
+              placeholder="Address"
+              id="address"
+              required
+              onChange={handleChange}
+              value={formData.address}
+            />
+          </div>
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="block mb-1 text-gray-700">Regular Price</label>

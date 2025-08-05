@@ -29,7 +29,7 @@ const ListingItem = ({ listing }) => {
                         {listing.description}
                     </p>
                     <p className='text-gray-800 mt-2 font-semibold'>
-                        ${listing.offer ? listing.discountPrice.toLocaleString('en-US') : listing.regularPrice.toLocaleString('en-US')}
+                        ₹{((listing.offer ? listing.discountPrice : listing.regularPrice) * 85).toLocaleString('en-IN')}
                         {listing.type === 'rent' && ' / month'}
                     </p>
                 </div>
