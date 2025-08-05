@@ -46,7 +46,7 @@ const CreateListing = () => {
       };
 
       const res = await fetch(
-        "https://heaven-hub-2.onrender.com/api/generate-description",
+        "https://heaven-hub-2.onrender.com/api/ai/generate-description",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
