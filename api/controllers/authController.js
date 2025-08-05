@@ -36,8 +36,8 @@ module.exports.signin = async (req, res, next) => {
         const { password: pass, ...rest } = validate._doc;
         res.cookie("access_token", token, { 
             httpOnly: false,
-            secure: false,
-            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 24 * 60 * 60 * 1000 
         })
             .status(200)
@@ -55,8 +55,8 @@ module.exports.google = async (req, res, next) => {
             const { password: pass, ...rest } = user._doc;
             res.cookie("access_token", token, { 
                 httpOnly: false,
-                secure: false,
-                sameSite: 'lax',
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: 24 * 60 * 60 * 1000 
             })
                 .status(200)
@@ -75,8 +75,8 @@ module.exports.google = async (req, res, next) => {
             const { password: pass, ...rest } = newUser._doc;
             return res.cookie("access_token", token, { 
                 httpOnly: false,
-                secure: false,
-                sameSite: 'lax',
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: 24 * 60 * 60 * 1000 
             })
                 .status(200)
@@ -90,7 +90,11 @@ module.exports.google = async (req, res, next) => {
 
 module.exports.signOut = (req, res, next) => {
     try {
-        res.clearCookie('access_token');
+        res.clearCookie('access_token', {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        });
         res.status(200).json({ success: true, message: 'User has been logged out' });
     } catch (error) {
         next(error);
