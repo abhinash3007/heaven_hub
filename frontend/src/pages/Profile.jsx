@@ -83,7 +83,7 @@ const Profile = () => {
     e.preventDefault();
     try {
       dispatch(updateUserStart());
-      const res = await fetch(`https://heaven-hub-zn7r.vercel.app/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`https://heaven-hub-2.onrender.com/api/user/update/${currentUser._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ const Profile = () => {
   const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`https://heaven-hub-zn7r.vercel.app/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`https://heaven-hub-2.onrender.com/api/user/delete/${currentUser._id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -125,7 +125,7 @@ const Profile = () => {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await fetch('https://heaven-hub-zn7r.vercel.app/api/auth/signout', {
+      const res = await fetch('https://heaven-hub-2.onrender.com/api/auth/signout', {
         credentials: 'include',
       });
       const data = await res.json();
@@ -156,6 +156,7 @@ const Profile = () => {
         return;
       }
       
+      // Set the listings (even if empty array)
       setUserListing(data.listing || []);
       setShowList(false);
 
@@ -168,7 +169,7 @@ const Profile = () => {
   }
   const handleDeleteListing = async (listingId) => {
     try {
-      const res = await fetch(`https://heaven-hub-zn7r.vercel.app/api/listing/delete/${listingId}`, {
+      const res = await fetch(`https://heaven-hub-2.onrender.com/api/listing/delete/${listingId}`, {
         method: 'DELETE',
         credentials: 'include',
       });
