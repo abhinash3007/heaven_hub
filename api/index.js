@@ -26,7 +26,10 @@ const cors = require('cors');
 
 app.use(cors({
   credentials: true,
-  origin: "http://localhost:5173", 
+  origin: [
+    "http://localhost:5173",
+    "https://heaven-hub-new.vercel.app"
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -55,8 +58,8 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+app.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
 });
 
 module.exports = app;
