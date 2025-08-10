@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
@@ -205,7 +205,7 @@ export default function Listing() {
       
       // Use the new radius search endpoint for more precise crime data
       const res = await fetch(
-        `/api/crime/radius-search?address=${encodeURIComponent(listing.address)}&radius=${crimeRadius}`
+        `https://heaven-hub-2.onrender.com/api/crime/radius-search?address=${encodeURIComponent(listing.address)}&radius=${crimeRadius}`
       );
       const data = await res.json();
       
