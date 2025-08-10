@@ -1,6 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { FaExclamationTriangle, FaShieldAlt, FaNewspaper, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
+import { FaExclamationTriangle, FaShieldAlt, FaNewspaper, FaMapMarkerAlt, FaSearch, FaMap } from "react-icons/fa";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+
+// Set your Mapbox access token here
+mapboxgl.accessToken = 'pk.eyJ1IjoidW5kZWZpbmVkMDMiLCJhIjoiY2x2dW45dzg2MWoycDJqcGF2em5qY3NxdiJ9.qiAvyWqbp40gxZf56okDUA';
 
 const CrimeNews = () => {
   const [crime, setCrime] = useState([]);
@@ -10,6 +15,10 @@ const CrimeNews = () => {
   const [searchType, setSearchType] = useState("city"); // "city", "address", or "radius"
   const [radius, setRadius] = useState(2); // Default 2km radius
   const [searchResults, setSearchResults] = useState(null);
+  const [showMap, setShowMap] = useState(false);
+  const [mapLoading, setMapLoading] = useState(false);
+  const mapContainer = useRef(null);
+  const map = useRef(null);
 
   const fetchCrimeNews = async (term = "", type = "city", radiusKm = 2) => {
     setLoading(true);
@@ -58,6 +67,64 @@ const CrimeNews = () => {
   useEffect(() => {
     fetchCrimeNews();
   }, []);
+
+  // Initialize map when showMap changes and crime data is available
+  useEffect(() => {
+    if (showMap && crime.length > 0 && searchResults?.center && !map.current) {
+      setMapLoading(true);
+      
+      try {
+        map.current = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: [searchResults.center.lng, searchResults.center.lat],
+          zoom: 12
+        });
+
+        // Add navigation controls
+        map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+        // Add crime markers
+        crime.forEach((crimeItem, index) => {
+          if (crimeItem.coordinates) {
+            new mapboxgl.Marker({ color: '#EF4444' })
+              .setLngLat([crimeItem.coordinates.lng, crimeItem.coordinates.lat])
+              .setPopup(new mapboxgl.Popup().setHTML(`
+                <div class="p-2">
+                  <h3 class="font-semibold text-sm">${crimeItem.title}</h3>
+                  <p class="text-xs text-gray-600">${crimeItem.distanceFormatted} away</p>
+                  <p class="text-xs text-gray-500">${crimeItem.date}</p>
+                </div>
+              `))
+              .addTo(map.current);
+          }
+        });
+
+        // Add center marker
+        new mapboxgl.Marker({ color: '#3B82F6' })
+          .setLngLat([searchResults.center.lng, searchResults.center.lat])
+          .setPopup(new mapboxgl.Popup().setHTML(`
+            <div class="p-2">
+              <h3 class="font-semibold text-sm">Search Center</h3>
+              <p class="text-xs text-gray-600">${searchResults.searchAddress}</p>
+              <p class="text-xs text-gray-500">${searchResults.radius}km radius</p>
+            </div>
+          `))
+          .addTo(map.current);
+
+        setMapLoading(false);
+      } catch (error) {
+        console.error('Error initializing map:', error);
+        setMapLoading(false);
+      }
+    }
+
+    // Cleanup map when showMap becomes false
+    if (!showMap && map.current) {
+      map.current.remove();
+      map.current = null;
+    }
+  }, [showMap, crime, searchResults]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -187,6 +254,19 @@ const CrimeNews = () => {
               <p className="text-blue-800">{searchResults.totalFound} incidents</p>
             </div>
           </div>
+          
+          {/* Map Toggle Button */}
+          {searchResults.center && (
+            <div className="mt-4 pt-4 border-t border-blue-200">
+              <button
+                onClick={() => setShowMap(!showMap)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
+                <FaMap />
+                {showMap ? 'Hide Map' : 'Show Map'}
+              </button>
+            </div>
+          )}
         </div>
       )}
 
