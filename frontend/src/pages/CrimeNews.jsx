@@ -1,43 +1,38 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  FaExclamationTriangle,
-  FaShieldAlt,
-  FaNewspaper,
-  FaMapMarkerAlt,
-  FaSearch,
-} from "react-icons/fa";
-import CrimeTest from "../components/CrimeTest";
+import { FaExclamationTriangle, FaShieldAlt, FaNewspaper, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
 
 const CrimeNews = () => {
   const [crime, setCrime] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchType, setSearchType] = useState("city"); 
-  const [radius, setRadius] = useState(2); 
+  const [searchType, setSearchType] = useState("city"); // "city", "address", or "radius"
+  const [radius, setRadius] = useState(2); // Default 2km radius
   const [searchResults, setSearchResults] = useState(null);
 
   const fetchCrimeNews = async (term = "", type = "city", radiusKm = 2) => {
     setLoading(true);
     setError(false);
     setSearchResults(null);
-
+    
     try {
       let url;
+      
       if (type === "radius") {
-        url = `/api/crime/radius-search?address=${encodeURIComponent(term)}&radius=${radiusKm}`;
+        // Use the new radius search endpoint
+        url = `https://heaven-hub-2.onrender.com/api/crime/radius-search?address=${encodeURIComponent(term)}&radius=${radiusKm}`;
       } else {
         // Use existing city/address search
         const param = type === "address" ? "address" : "city";
         url = term
-          ? `/api/crime/summary?${param}=${encodeURIComponent(term)}`
-          : "/api/crime/summary";
+          ? `https://heaven-hub-2.onrender.com/api/crime/summary?${param}=${encodeURIComponent(term)}`
+          : "https://heaven-hub-2.onrender.com/api/crime/summary";
       }
-
+      
       const res = await fetch(url);
       const data = await res.json();
-
+      
       if (data.success) {
         setCrime(data.data);
         if (type === "radius") {
@@ -45,7 +40,7 @@ const CrimeNews = () => {
             center: data.center,
             radius: data.radius,
             totalFound: data.totalFound,
-            searchAddress: data.searchAddress,
+            searchAddress: data.searchAddress
           });
         }
       } else {
@@ -53,7 +48,7 @@ const CrimeNews = () => {
         setError(true);
       }
     } catch (err) {
-      console.error("Error fetching crime news:", err);
+      console.error('Error fetching crime news:', err);
       setCrime([]);
       setError(true);
     }
@@ -73,19 +68,13 @@ const CrimeNews = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-4">
-      {/* Temporary API Test Component */}
-      <div className="mb-8">
-        <CrimeTest />
-      </div>
-      
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-800 mb-2 flex items-center gap-2">
           <FaExclamationTriangle className="text-red-500" />
           Crime News & Safety Information
         </h1>
         <p className="text-slate-600">
-          Stay informed about recent crime incidents. Search by city, address,
-          or use radius search for precise location-based crime data.
+          Stay informed about recent crime incidents. Search by city, address, or use radius search for precise location-based crime data.
         </p>
       </div>
 
@@ -97,8 +86,8 @@ const CrimeNews = () => {
               <input
                 type="text"
                 placeholder={
-                  searchType === "city"
-                    ? "Enter city name (e.g., Mumbai, Delhi, Bangalore)"
+                  searchType === "city" 
+                    ? "Enter city name (e.g., Mumbai, Delhi, Bangalore)" 
                     : searchType === "address"
                     ? "Enter full address (e.g., 123 Main St, Mumbai, Maharashtra)"
                     : "Enter address for radius search (e.g., 123 Main St, Mumbai)"
@@ -116,7 +105,7 @@ const CrimeNews = () => {
               Search
             </button>
           </div>
-
+          
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-4">
               <label className="flex items-center gap-2">
@@ -156,7 +145,7 @@ const CrimeNews = () => {
                 </span>
               </label>
             </div>
-
+            
             {searchType === "radius" && (
               <div className="flex items-center gap-2">
                 <label className="text-sm text-slate-700">Radius:</label>
@@ -195,9 +184,7 @@ const CrimeNews = () => {
             </div>
             <div>
               <span className="text-blue-600 font-medium">Crimes Found:</span>
-              <p className="text-blue-800">
-                {searchResults.totalFound} incidents
-              </p>
+              <p className="text-blue-800">{searchResults.totalFound} incidents</p>
             </div>
           </div>
         </div>
@@ -208,9 +195,7 @@ const CrimeNews = () => {
         <div className="text-center py-8">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           <p className="mt-2 text-slate-600">
-            {searchType === "radius"
-              ? "Searching for crimes in your area..."
-              : "Loading crime news..."}
+            {searchType === "radius" ? "Searching for crimes in your area..." : "Loading crime news..."}
           </p>
         </div>
       )}
@@ -221,9 +206,10 @@ const CrimeNews = () => {
           <div className="flex items-center gap-2 text-red-700">
             <FaExclamationTriangle />
             <span>
-              {searchType === "radius"
+              {searchType === "radius" 
                 ? "Unable to perform radius search. Please check the address and try again."
-                : "Unable to fetch crime news. Please try again later."}
+                : "Unable to fetch crime news. Please try again later."
+              }
             </span>
           </div>
         </div>
@@ -235,21 +221,19 @@ const CrimeNews = () => {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2">
               <FaNewspaper className="text-blue-500" />
-              {searchType === "radius"
+              {searchType === "radius" 
                 ? `Crime Incidents Within ${radius}km Radius (${crime.length} found)`
-                : `Recent Crime Incidents (${crime.length} found)`}
+                : `Recent Crime Incidents (${crime.length} found)`
+              }
             </h2>
             <div className="text-sm text-slate-500">
               Based on recent news articles
             </div>
           </div>
-
+          
           <div className="grid gap-4">
             {crime.map((item, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-400"
-              >
+              <div key={idx} className="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-400">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h3 className="font-semibold text-slate-800 mb-2">
@@ -262,8 +246,7 @@ const CrimeNews = () => {
                       <div className="flex items-center gap-4">
                         {item.publishedAt && (
                           <span className="text-slate-500">
-                            Published:{" "}
-                            {new Date(item.publishedAt).toLocaleDateString()}
+                            Published: {new Date(item.publishedAt).toLocaleDateString()}
                           </span>
                         )}
                         {searchType === "radius" && item.distanceFormatted && (
@@ -281,18 +264,8 @@ const CrimeNews = () => {
                           className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
                         >
                           Read full article
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                            />
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                         </a>
                       )}
@@ -310,14 +283,16 @@ const CrimeNews = () => {
         <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
           <FaShieldAlt className="text-green-500 text-4xl mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-green-800 mb-2">
-            {searchType === "radius"
+            {searchType === "radius" 
               ? "No Crime Incidents Found in This Area"
-              : "No Recent Crime Incidents Found"}
+              : "No Recent Crime Incidents Found"
+            }
           </h3>
           <p className="text-green-700">
             {searchType === "radius"
               ? `Great news! No recent crime incidents have been reported within ${radius}km of this location.`
-              : "Great news! No recent crime incidents have been reported in this area."}
+              : "Great news! No recent crime incidents have been reported in this area."
+            }
           </p>
         </div>
       )}
@@ -325,14 +300,11 @@ const CrimeNews = () => {
       {/* Disclaimer */}
       <div className="mt-8 p-4 bg-slate-50 rounded-lg">
         <p className="text-sm text-slate-600">
-          <strong>Disclaimer:</strong> Crime data is based on recent news
-          articles and may not be comprehensive.
-          {searchType === "radius" &&
-            " Radius search uses geocoding to approximate locations and distances."}
-          This information is provided for awareness purposes only and should
-          not be the sole factor in making real estate decisions. Always conduct
-          thorough research and consider multiple factors when evaluating a
-          property or neighborhood.
+          <strong>Disclaimer:</strong> Crime data is based on recent news articles and may not be comprehensive. 
+          {searchType === "radius" && " Radius search uses geocoding to approximate locations and distances."}
+          This information is provided for awareness purposes only and should not be the sole factor in making 
+          real estate decisions. Always conduct thorough research and consider multiple factors when evaluating 
+          a property or neighborhood.
         </p>
       </div>
     </div>

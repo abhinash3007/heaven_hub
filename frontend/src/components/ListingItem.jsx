@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { Link } from 'react-router-dom';
 import { MdLocationOn } from 'react-icons/md';
 import { FaShieldAlt, FaExclamationTriangle } from 'react-icons/fa'
@@ -8,18 +8,30 @@ const ListingItem = ({ listing }) => {
     const [crimeCount, setCrimeCount] = useState(null);
     const [crimeLoading, setCrimeLoading] = useState(false);
 
-       useEffect(() => {
+    useEffect(() => {
         const fetchCrimeCount = async () => {
             if (!listing?.address) return;
             
             try {
                 setCrimeLoading(true);
-                const res = await fetch(`/api/crime/count?address=${encodeURIComponent(listing.address)}`);
+                
+                // Add a small delay to prevent overwhelming the API
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 1000));
+                
+                // Use the proxy endpoint (will go to localhost:3000 via Vite proxy)
+                const res = await fetch(`/api/crime/radius-search?address=${encodeURIComponent(listing.address)}&radius=2`);
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                
                 const data = await res.json();
                 
                 if (data.success) {
-                    setCrimeCount(data.count);
+                    // Use totalFound from the radius-search response
+                    setCrimeCount(data.totalFound || data.data?.length || 0);
                 } else {
+                    console.log('Crime API returned error:', data.error);
                     setCrimeCount(0);
                 }
             } catch (error) {

@@ -9,7 +9,6 @@ const aiRoutes = require('./routes/aiRoutes');
 const crimeRoutes=require( "./routes/crimeRoutes");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const crime=require("./routes/crimeRoutes");
 
 mongoose.connect(`${process.env.MONGO}`).then(() => {
     console.log("Connected to database");
