@@ -34,6 +34,12 @@ const CreateListing = () => {
 
   const generateDescription = async () => {
     try {
+      // Validate required fields before making API call
+      if (!formData.address || !formData.regularPrice || !formData.bedrooms) {
+        setError("Please fill in address, price, and bedrooms first");
+        return;
+      }
+
       const body = {
         type: `${formData.bedrooms}BHK`,
         location: formData.address,
@@ -46,7 +52,7 @@ const CreateListing = () => {
       };
 
       const res = await fetch(
-        "https://heaven-hub-2.onrender.com/api/ai/generate-description",
+        "/api/ai/generate-description",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -60,6 +66,7 @@ const CreateListing = () => {
           ...prev,
           description: data.description,
         }));
+        setError(""); // Clear any previous errors
       } else {
         setError("Failed to generate description");
       }
@@ -164,7 +171,7 @@ const CreateListing = () => {
       setLoading(true);
       setError("");
       
-      const res = await fetch("https://heaven-hub-2.onrender.com/api/listing/create/", {
+      const res = await fetch("/api/listing/create/", {
         method: "POST",
         credentials: "include",
         headers: {

@@ -10,7 +10,14 @@ const openai = new OpenAI({
 router.post("/generate-description", async (req, res) => {
   const { type, location, price, features } = req.body;
 
-  const prompt = `Write a short, catchy 4-line real estate description for a ${type} in ${location}, priced at ₹${price}, with features like ${features.join(', ')}.`;
+  if (!process.env.OPENAI_API_KEY) {
+    const featureText = featureArray.length > 0 ? ` featuring ${featureArray.join(', ')}` : '';
+    const description = `Discover this beautiful ${type} located in ${location}. Priced at ₹${price}, this property offers excellent value for money${featureText}. Perfect for those seeking comfort and convenience in a prime location. Don't miss this opportunity to own your dream property!`;
+    
+    return res.json({ description });
+  }
+
+  const prompt = `Write a short, catchy 4-line real estate description for a ${type} in ${location}, priced at ₹${price}, with features like ${featureArray.join(', ')}.`;
 
   try {
     const response = await openai.chat.completions.create({
@@ -22,11 +29,11 @@ router.post("/generate-description", async (req, res) => {
     res.json({ description });
   } catch (err) {
     console.error(err);
-    if (err.code === 'insufficient_quota') {
-      res.status(500).json({ error: "OpenAI quota exceeded. Please try again later." });
-    } else {
-      res.status(500).json({ error: "Failed to generate description" });
-    }
+    
+    const featureText = featureArray.length > 0 ? ` featuring ${featureArray.join(', ')}` : '';
+    const description = `Discover this beautiful ${type} located in ${location}. Priced at ₹${price}, this property offers excellent value for money${featureText}. Perfect for those seeking comfort and convenience in a prime location. Don't miss this opportunity to own your dream property!`;
+    
+    res.json({ description });
   }
 });
 

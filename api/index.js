@@ -6,10 +6,10 @@ const userRouter = require("./routes/userRouter");
 const authRouter = require("./routes/authRouter");
 const listingRouter = require("./routes/listingRouter");
 const aiRoutes = require('./routes/aiRoutes');
-
+const crimeRoutes=require( "./routes/crimeRoutes");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-
+const crime=require("./routes/crimeRoutes");
 
 mongoose.connect(`${process.env.MONGO}`).then(() => {
     console.log("Connected to database");
@@ -41,7 +41,7 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
 app.use('/api/ai', aiRoutes);
-
+app.use('/api/crime', crimeRoutes);
 
 app.use(express.static(path.join(currentDir, '/frontend/dist')));
 app.get('*', (req, res) => {

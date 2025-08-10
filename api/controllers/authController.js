@@ -8,7 +8,12 @@ module.exports.signup = async (req, res, next) => {
     if (!userName || !email || !password) {
         return res.status(400).json({ message: "All fields are required" });
     }
-    
+    const existingUser = await User.findOne({ email: req.body.email });
+  if (existingUser) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Email already in use" });
+  }
     try {
         const hashPassword = bcrypt.hashSync(password, 10);
         const newUser = new User({ userName, email, password: hashPassword });
