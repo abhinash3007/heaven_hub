@@ -36,6 +36,14 @@ npm install
 MONGO_URI=your_mongo_connection_string
 JWT_SECRET=your_jwt_secret
 PORT=5000
+
+# Additional backend env vars for crime routes and geocoding
+MAPBOX_TOKEN=your_mapbox_access_token
+NEWSDATA_API_KEY=your_newsdata_api_key
+
+# Frontend .env (in `frontend/.env`)
+VITE_MAPBOX_TOKEN=your_mapbox_access_token
+
 Run the backend server:
 
 

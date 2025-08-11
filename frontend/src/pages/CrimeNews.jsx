@@ -5,7 +5,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 // Set your Mapbox access token here
-mapboxgl.accessToken = 'pk.eyJ1IjoidW5kZWZpbmVkMDMiLCJhIjoiY2x2dW45dzg2MWoycDJqcGF2em5qY3NxdiJ9.qiAvyWqbp40gxZf56okDUA';
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 const CrimeNews = () => {
   const [crime, setCrime] = useState([]);
@@ -30,13 +30,13 @@ const CrimeNews = () => {
       
       if (type === "radius") {
         // Use the new radius search endpoint
-        url = `https://heaven-hub-2.onrender.com/api/crime/radius-search?address=${encodeURIComponent(term)}&radius=${radiusKm}`;
+        url = `/api/crime/radius-search?address=${encodeURIComponent(term)}&radius=${radiusKm}`;
       } else {
         // Use existing city/address search
         const param = type === "address" ? "address" : "city";
         url = term
-          ? `https://heaven-hub-2.onrender.com/api/crime/summary?${param}=${encodeURIComponent(term)}`
-          : "https://heaven-hub-2.onrender.com/api/crime/summary";
+          ? `/api/crime/summary?${param}=${encodeURIComponent(term)}`
+          : "/api/crime/summary";
       }
       
       const res = await fetch(url);

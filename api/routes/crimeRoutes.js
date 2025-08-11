@@ -3,8 +3,7 @@ const axios = require('axios');
 const router = express.Router();
 
 // Mapbox configuration
-//pk.eyJ1IjoidW5kZWZpbmVkMDMiLCJhIjoiY2x2dW45dzg2MWoycDJqcGF2em5qY3NxdiJ9.qiAvyWqbp40gxZf56okDUA
-const MAPBOX_TOKEN = 'pk.eyJ1IjoidW5kZWZpbmVkMDMiLCJhIjoiY2x2dW45dzg2MWoycDJqcGF2em5qY3NxdiJ9.qiAvyWqbp40gxZf56okDUA';
+const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 const MAPBOX_GEOCODING_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places';
 
 const CRIME_KEYWORDS = [
@@ -204,7 +203,7 @@ router.get('/summary', async (req, res) => {
             'https://newsdata.io/api/1/latest',
             {
                 params: {
-                    apikey: 'pub_252fcf639348463bbe561344d8e4ce47',
+                    apikey: process.env.NEWSDATA_API_KEY,
                     q: city,
                     country: 'in',
                     language: 'en'
@@ -266,7 +265,7 @@ router.get('/count', async (req, res) => {
             'https://newsdata.io/api/1/latest',
             {
                 params: {
-                    apikey: 'pub_252fcf639348463bbe561344d8e4ce47',
+                    apikey: process.env.NEWSDATA_API_KEY,
                     q: city,
                     country: 'in',
                     language: 'en'
@@ -336,7 +335,7 @@ router.get('/radius-search', async (req, res) => {
             'https://newsdata.io/api/1/latest',
             {
                 params: {
-                    apikey: 'pub_252fcf639348463bbe561344d8e4ce47',
+                    apikey: process.env.NEWSDATA_API_KEY,
                     q: city || coordinates.placeName.split(',')[0],
                     country: 'in',
                     language: 'en'
