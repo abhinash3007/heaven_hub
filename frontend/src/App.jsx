@@ -15,7 +15,7 @@ import Heaven from './pages/Heaven';
 import Footer from './components/Footer';
 import Foundation from './pages/Foundation';
 import AuthCheck from './components/AuthCheck';
-import CrimeNews from './pages/CrimeNews';
+
 
 const App = () => {
   const location = useLocation();
@@ -29,7 +29,6 @@ const App = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/sign-in" element={<SignIn />} />
-        <Route path='/crime' element={<CrimeNews />} />
         <Route path='/search' element={<Search />} />
         <Route path='/listing/:listingId' element={<Listings />} />
         <Route path='/foundation' element={<Foundation />} />

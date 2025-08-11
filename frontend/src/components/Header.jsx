@@ -57,7 +57,6 @@ const Header = () => {
         <nav className='hidden sm:flex flex-wrap items-center gap-4 mt-4 sm:mt-0'>
           <Link to='/home' className='text-gray-700 hover:text-blue-600 text-sm sm:text-base'>Home</Link>
                      <Link to='/foundation' className='text-gray-700 hover:text-blue-600 text-sm sm:text-base'>The Foundation</Link>
-           <Link to='/crime' className='text-gray-700 hover:text-blue-600 text-sm sm:text-base'>Crime News</Link>
            <Link to='/about' className='text-gray-700 hover:text-blue-600 text-sm sm:text-base'>About</Link>
           <Link to='/profile'>
             {currentUser ? (
@@ -87,7 +86,6 @@ const Header = () => {
           <nav className='flex flex-col items-center gap-2 p-4'>
             <Link to='/home' className='text-gray-700 hover:text-blue-600 text-sm'>Home</Link>
             <Link to='/foundation' className='text-gray-700 hover:text-blue-600 text-sm'>The Foundation</Link>
-            <Link to='/crime' className='text-gray-700 hover:text-blue-600 text-sm'>Crime News</Link>
             <Link to='/about' className='text-gray-700 hover:text-blue-600 text-sm'>About</Link>
             <Link to='/profile'>
               {currentUser ? (
