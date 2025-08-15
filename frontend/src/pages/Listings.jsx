@@ -50,7 +50,7 @@ export default function Listing() {
       try {
         setLoading(true);
         const res = await fetch(
-          `https://heaven-hub-2.onrender.com/api/listing/get/${params.listingId}`
+          `/api/listing/get/${params.listingId}`
         );
         const data = await res.json();
         if (data.success === false) {
@@ -178,7 +178,7 @@ export default function Listing() {
       setCrimeError(false);
 
       const countRes = await fetch(
-        `https://heaven-hub-2.onrender.com/api/crime/count?address=${encodeURIComponent(
+        `/api/crime/count?address=${encodeURIComponent(
           listing.address
         )}`
       );
@@ -191,7 +191,7 @@ export default function Listing() {
       }
 
       const summaryRes = await fetch(
-        `https://heaven-hub-2.onrender.com/api/crime/summary?address=${encodeURIComponent(
+        `/api/crime/summary?address=${encodeURIComponent(
           listing.address
         )}`
       );

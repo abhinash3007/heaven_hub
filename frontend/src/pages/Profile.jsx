@@ -1,5 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import React, { useEffect, useState, useRef } from "react";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import {
   updateUserStart,
   updateUserSuccess,
@@ -8,10 +13,10 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   signOutUserStart,
-} from '../redux/user/userSlice';
-import { useSelector, useDispatch } from 'react-redux';
-import { app } from '../firebase';
-import { Link } from 'react-router-dom';
+} from "../redux/user/userSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { app } from "../firebase";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const fileRef = useRef(null);
@@ -21,13 +26,13 @@ const Profile = () => {
   const [filePer, setFilePer] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({
-    userName: currentUser?.userName || '',
-    email: currentUser?.email || '',
-    avatar: currentUser?.avatar || '',
-    password: currentUser?.password || '',
+    userName: currentUser?.userName || "",
+    email: currentUser?.email || "",
+    avatar: currentUser?.avatar || "",
+    password: currentUser?.password || "",
   });
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [showList,setShowList]=useState(true);
+  const [showList, setShowList] = useState(true);
   const [showListingErrors, setShowListingErrors] = useState(false);
   const [userListing, setUserListing] = useState([]);
   const [loadingListings, setLoadingListings] = useState(false);
@@ -42,10 +47,10 @@ const Profile = () => {
   useEffect(() => {
     if (currentUser) {
       setFormData({
-        userName: currentUser.userName || '',
-        email: currentUser.email || '',
-        avatar: currentUser.avatar || '',
-        password: currentUser.password || '',
+        userName: currentUser.userName || "",
+        email: currentUser.email || "",
+        avatar: currentUser.avatar || "",
+        password: currentUser.password || "",
       });
     }
   }, [currentUser]);
@@ -57,13 +62,14 @@ const Profile = () => {
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
-      'state_changed',
+      "state_changed",
       (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setFilePer(Math.round(progress));
       },
       (error) => {
-        console.error('File upload error:', error); 
+        console.error("File upload error:", error);
         setFileUploadError(true);
       },
       () => {
@@ -83,11 +89,11 @@ const Profile = () => {
     try {
       dispatch(updateUserStart());
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(formData),
       });
       const data = await res.json();
@@ -106,9 +112,9 @@ const Profile = () => {
   const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-              const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-        method: 'DELETE',
-        credentials: 'include',
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+        credentials: "include",
       });
       const data = await res.json();
       if (data.success === false) {
@@ -124,8 +130,8 @@ const Profile = () => {
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
-              const res = await fetch('/api/auth/signout', {
-        credentials: 'include',
+      const res = await fetch("/api/auth/signout", {
+        credentials: "include",
       });
       const data = await res.json();
       if (data.success === false) {
@@ -142,10 +148,10 @@ const Profile = () => {
       setShowList(false);
       setShowListingErrors(false);
       setLoadingListings(true);
-      
-              const res = await fetch(`/api/user/listings/${currentUser._id}`,{
-        method: 'GET',
-        credentials: 'include'
+
+      const res = await fetch(`/api/user/listings/${currentUser._id}`, {
+        method: "GET",
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -154,156 +160,189 @@ const Profile = () => {
         setShowList(true);
         return;
       }
-      
+
       // Set the listings (even if empty array)
       setUserListing(data.listing || []);
       setShowList(false);
-
     } catch (error) {
       setShowListingErrors(true);
       setShowList(true);
     } finally {
       setLoadingListings(false);
     }
-  }
+  };
   const handleDeleteListing = async (listingId) => {
     try {
-              const res = await fetch(`/api/listing/delete/${listingId}`, {
-        method: 'DELETE',
-        credentials: 'include',
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: "DELETE",
+        credentials: "include",
       });
       const data = await res.json();
       if (data.success === false) {
         return;
       }
-      setUserListing((prev) => prev.filter((listing) => listing._id !== listingId));
-     }
-      catch (error) {
-      console.error('Failed to delete listing:', error);
+      setUserListing((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+    } catch (error) {
+      console.error("Failed to delete listing:", error);
     }
-    
-  }
+  };
   return (
-    <div className='p-3 pt-32 max-w-lg mx-auto'>
-      <h1 className='text-3xl font-bold text-center my-7'>Profile</h1>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+    <div className="p-3 pt-32 max-w-lg mx-auto">
+      <h1 className="text-3xl font-bold text-center my-7">Profile</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           onChange={(e) => setFile(e.target.files[0])}
-          type='file'
+          type="file"
           ref={fileRef}
           hidden
-          accept='image/*'
+          accept="image/*"
         />
         <img
           onClick={() => fileRef.current.click()}
-          className='rounded-full self-center h-24 w-24'
-          src={formData.avatar || currentUser?.avatar || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
-          alt='profile'
+          className="rounded-full self-center h-24 w-24"
+          src={
+            formData.avatar ||
+            currentUser?.avatar ||
+            "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+          }
+          alt="profile"
         />
         <p>
           {fileUploadError ? (
-            <span className='text-red-700'>
+            <span className="text-red-700">
               Error Image upload (image must be less than 2 mb)
             </span>
           ) : filePer > 0 && filePer < 100 ? (
-            <span className='text-slate-700'>{`Uploading ${filePer}%`}</span>
+            <span className="text-slate-700">{`Uploading ${filePer}%`}</span>
           ) : filePer === 100 ? (
-            <span className='text-green-700'>Image successfully uploaded!</span>
+            <span className="text-green-700">Image successfully uploaded!</span>
           ) : (
-            ''
+            ""
           )}
         </p>
         <input
-          className='border p-3 rounded-lg'
-          type='text'
-          placeholder='userName'
-          id='userName'
+          className="border p-3 rounded-lg"
+          type="text"
+          placeholder="userName"
+          id="userName"
           value={formData.userName}
           onChange={handleChange}
         />
         <input
-          className='border p-3 rounded-lg'
-          type='email'
-          placeholder='email'
-          id='email'
+          className="border p-3 rounded-lg"
+          type="email"
+          placeholder="email"
+          id="email"
           value={formData.email}
           onChange={handleChange}
         />
         <input
-          className='border p-3 rounded-lg'
-          type='password'
-          placeholder='password'
-          id='password'
+          className="border p-3 rounded-lg"
+          type="password"
+          placeholder="password"
+          id="password"
           value={formData.password}
           onChange={handleChange}
         />
         <button
           disabled={loading}
-          className='border p-3 text-white uppercase rounded-lg bg-slate-700 hover:opacity-85'
+          className="border p-3 text-white uppercase rounded-lg bg-slate-700 hover:opacity-85"
         >
-          {loading ? 'Loading...' : 'UPDATE'}
+          {loading ? "Loading..." : "UPDATE"}
         </button>
         <Link
-          className='p-3 rounded-lg bg-green-600 uppercase text-center font-bold text-white'
-          to={'/create-listing'}
+          className="p-3 rounded-lg bg-green-600 uppercase text-center font-bold text-white"
+          to={"/create-listing"}
         >
           Create Listing
         </Link>
       </form>
-      <div className='flex justify-between mt-5'>
-        <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer'>
+      <div className="flex justify-between mt-5">
+        <span
+          onClick={handleDeleteUser}
+          className="text-red-700 cursor-pointer"
+        >
           Delete Account
         </span>
-        <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>
+        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">
           Sign Out
         </span>
       </div>
-      <p className='text-red-700 mt-5'>{error || ''}</p>
-      <p className='text-green-700 mt-5'>
-        {updateSuccess ? 'User is updated successfully!' : ''}
+      <p className="text-red-700 mt-5">{error || ""}</p>
+      <p className="text-green-700 mt-5">
+        {updateSuccess ? "User is updated successfully!" : ""}
       </p>
       {showList && (
-        <button 
-          onClick={handleShowListings} 
+        <button
+          onClick={handleShowListings}
           disabled={loadingListings}
-          className='w-full text-green-600 disabled:opacity-50'
+          className="w-full text-green-600 disabled:opacity-50"
         >
-          {loadingListings ? 'Loading...' : 'Show Listings'}
+          {loadingListings ? "Loading..." : "Show Listings"}
         </button>
       )}
-      <p>{showListingErrors ? 'Some error occurred' : ''}</p>
+      <p>{showListingErrors ? "Some error occurred" : ""}</p>
       {!showList && (
-        <div className='flex flex-col gap-4'>
-          <h1 className='text-center mt-7 text-2xl font-bold'>Your Listings</h1>
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-2xl font-bold">Your Listings</h1>
           {loadingListings ? (
-            <div className='text-center py-8'>
-              <p className='text-gray-500 text-lg'>Loading your listings...</p>
+            <div className="text-center py-8">
+              <p className="text-gray-500 text-lg">Loading your listings...</p>
             </div>
           ) : userListing && userListing.length > 0 ? (
             userListing.map((listing) => (
-              <div key={listing._id} className='border rounded-lg p-3 flex justify-between items-center gap-4'>
+              <div
+                key={listing._id}
+                className="border rounded-lg p-3 flex justify-between items-center gap-4"
+              >
                 <Link to={`/listing/${listing._id}`}>
-                  <img src={listing.imageUrls[0]} alt='listing-cover' className='w-16 h-16 object-contain'></img></Link>
-                <Link to={`/listing/${listing._id}`} className='text-slate-600 font-semibold flex-1 hover:underline truncate'><p>{listing.name}</p></Link>
-                <div className='flex flex-row item-center gap-2'>
-                  <button onClick={() => handleDeleteListing(listing._id)} className='text-red-700 uppercase p-2 rounded-lg bg-pink-200 w-full'>Delete</button>
-                  <Link to={`/update-listing/${listing._id}`}><button className='text-green-700 uppercase p-2 rounded-lg bg-green-200 w-full'>Edit</button></Link>
+                  <img
+                    src={listing.imageUrls[0]}
+                    alt="listing-cover"
+                    className="w-16 h-16 object-contain"
+                  ></img>
+                </Link>
+                <Link
+                  to={`/listing/${listing._id}`}
+                  className="text-slate-600 font-semibold flex-1 hover:underline truncate"
+                >
+                  <p>{listing.name}</p>
+                </Link>
+                <div className="flex flex-row item-center gap-2">
+                  <button
+                    onClick={() => handleDeleteListing(listing._id)}
+                    className="text-red-700 uppercase p-2 rounded-lg bg-pink-200 w-full"
+                  >
+                    Delete
+                  </button>
+                  <Link to={`/update-listing/${listing._id}`}>
+                    <button className="text-green-700 uppercase p-2 rounded-lg bg-green-200 w-full">
+                      Edit
+                    </button>
+                  </Link>
                 </div>
               </div>
             ))
           ) : (
-            <div className='text-center py-8'>
-              <p className='text-gray-500 text-lg mb-4'>No listings found</p>
-              <p className='text-gray-400 text-sm'>You haven't created any listings yet.</p>
-              <Link to='/create-listing' className='inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200'>
+            <div className="text-center py-8">
+              <p className="text-gray-500 text-lg mb-4">No listings found</p>
+              <p className="text-gray-400 text-sm">
+                You haven't created any listings yet.
+              </p>
+              <Link
+                to="/create-listing"
+                className="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+              >
                 Create Your First Listing
               </Link>
             </div>
           )}
           {!loadingListings && (
-            <button 
-              onClick={() => setShowList(true)} 
-              className='w-full text-gray-600 mt-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50'
+            <button
+              onClick={() => setShowList(true)}
+              className="w-full text-gray-600 mt-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
             >
               Hide Listings
             </button>
@@ -315,5 +354,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-
