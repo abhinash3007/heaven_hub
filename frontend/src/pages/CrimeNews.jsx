@@ -20,8 +20,8 @@ const CrimeNews = () => {
     try {
       const param = type === "address" ? "address" : "city";
       const url = term
-        ? `/api/crime/summary?${param}=${encodeURIComponent(term)}`
-        : "/api/crime/summary";
+        ? `https://heaven-hub-2.onrender.com/api/crime/summary?${param}=${encodeURIComponent(term)}`
+        : "https://heaven-hub-2.onrender.com/api/crime/summary";
 
       const res = await fetch(url);
       const data = await res.json();

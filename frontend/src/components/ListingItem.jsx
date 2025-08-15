@@ -14,7 +14,7 @@ const ListingItem = ({ listing }) => {
       try {
         setCrimeLoading(true);
         const res = await fetch(
-          `/api/crime/count?address=${encodeURIComponent(
+          `https://heaven-hub-2.onrender.com/api/crime/count?address=${encodeURIComponent(
             listing.address
           )}`
         );

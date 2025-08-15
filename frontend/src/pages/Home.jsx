@@ -16,9 +16,9 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-      const offerRes = await fetch('/api/listing/get?offer=true&limit=4');
-      const rentRes = await fetch('/api/listing/get?type=rent&limit=4');
-      const saleRes = await fetch('/api/listing/get?type=sale&limit=4');
+      const offerRes = await fetch('https://heaven-hub-2.onrender.com/api/listing/get?offer=true&limit=4');
+      const rentRes = await fetch('https://heaven-hub-2.onrender.com/api/listing/get?type=rent&limit=4');
+      const saleRes = await fetch('https://heaven-hub-2.onrender.com/api/listing/get?type=sale&limit=4');
 
         const offers = await offerRes.json();
         const rents = await rentRes.json();
