@@ -39,11 +39,10 @@ const UpdateListing = () => {
     const fetchListing = async () => {
       const listingId = params.listingId;
       const res = await fetch(
-        `https://heaven-hub-2.onrender.com/api/listing/get/${listingId}`
+        `/api/listing/get/${listingId}`
       );
       const data = await res.json();
       if (data.success === false) {
-        console.log(data.message);
         return;
       }
       setFormData(data);
@@ -85,7 +84,6 @@ const UpdateListing = () => {
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(`Upload is ${progress}% done`);
         },
         (error) => {
           reject(error);
@@ -125,7 +123,7 @@ const UpdateListing = () => {
       setLoading(true);
       setError(false);
       const res = await fetch(
-        `https://heaven-hub-2.onrender.com/api/listing/update/${params.listingId}`,
+        `/api/listing/update/${params.listingId}`,
         {
           method: "POST",
           headers: {

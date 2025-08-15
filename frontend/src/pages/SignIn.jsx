@@ -28,7 +28,7 @@ const SignIn = () => {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch(`https://heaven-hub-2.onrender.com/api/auth/signin`, {
+      const res = await fetch(`/api/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,9 +37,6 @@ const SignIn = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log('SignIn Response:', data);
-      console.log('Response Status:', res.status);
-      
       if (!res.ok || data.error || data.success === false) {
         dispatch(signInFailure(data.message || data.error || 'Sign in failed'));
         return;

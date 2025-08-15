@@ -52,7 +52,7 @@ const Search = () => {
       urlParams.set("limit", 6);
       const searchQuery = urlParams.toString();
       const res = await fetch(
-        `https://heaven-hub-2.onrender.com/api/listing/get?${searchQuery}`
+        `/api/listing/get?${searchQuery}`
       );
       const data = await res.json();
 
@@ -103,7 +103,7 @@ const Search = () => {
     urlParams.set("limit", 6);
     const searchQuery = urlParams.toString();
     const res = await fetch(
-      `https://heaven-hub-2.onrender.com/api/listing/get?${searchQuery}`
+      `/api/listing/get?${searchQuery}`
     );
     const data = await res.json();
     setShowMore(data.length === 6);

@@ -16,7 +16,7 @@ mongoose.connect(`${process.env.MONGO}`).then(() => {
     console.log("Database connection error:", err);
 });
 
-console.log('MONGO env variable:', process.env.MONGO);
+// Removed sensitive environment variable logging
 
 const currentDir = path.resolve();
 
@@ -42,7 +42,7 @@ app.use("/api/listing", listingRouter);
 app.use('/api/ai', aiRoutes);
 app.use('/api/crime', crimeRoutes);
 
-app.use(express.static(path.join(currentDir, '/frontend/dist')));
+app.use(express.static(path.join(currentDir, 'frontend', 'dist')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(currentDir, 'frontend', 'dist', 'index.html'));
 });
