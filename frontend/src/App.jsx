@@ -15,6 +15,8 @@ import Heaven from './pages/Heaven';
 import Footer from './components/Footer';
 import Foundation from './pages/Foundation';
 import AuthCheck from './components/AuthCheck';
+//new
+import CrimeNews from './pages/CrimeNews';
 
 const App = () => {
   const location = useLocation();
@@ -31,6 +33,8 @@ const App = () => {
         <Route path='/search' element={<Search />} />
         <Route path='/listing/:listingId' element={<Listings />} />
         <Route path='/foundation' element={<Foundation />} />
+//new
+        <Route path='/crime-news' element={<CrimeNews />} />
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
           <Route path='/create-listing' element={<CreateListing />} />
@@ -38,7 +42,7 @@ const App = () => {
         </Route>
         <Route path="/sign-up" element={<SignUp />} />
       </Routes>
-      {location.pathname!== '/sign-in' && location.pathname!== '/sign-up' && location.pathname!=="/profile" && location.pathname!== '/search' && (
+      {location.pathname!== '/sign-in' && location.pathname!== '/sign-up' && location.pathname!=="/profile" && location.pathname!== '/search' && location.pathname!== '/crime-news' && (
         <Footer />
       )}
     </div>

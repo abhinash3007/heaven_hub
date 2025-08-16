@@ -1,3 +1,4 @@
+
 const express = require("express");
 const axios = require("axios");
 const router = express.Router();
@@ -5,16 +6,18 @@ const rateLimit = require("express-rate-limit");
 
 const NodeCache = require("node-cache");
 const crimeCache = new NodeCache({
-  stdTTL: 1800,
-  checkperiod: 600, 
+  stdTTL: 1800, // 30 minutes (1800 seconds)
+  checkperiod: 600, // Check every 10 minutes
+  useClones: false, // Better performance
 });
-const generateCacheKey = (city, type = "summary") => {
+
+const generateCacheKey = (city, type = "data") => {
   return `crime_${type}_${city.toLowerCase().replace(/\s+/g, "_")}`;
 };
 
 const crimeLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
-  max: 10, 
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Increased limit since we're caching
   message: {
     success: false,
     error: "Too many requests, please try again later."
@@ -243,17 +246,21 @@ router.get("/summary", async (req, res) => {
       });
     }
 
-    const cacheKey = generateCacheKey(city, "summary");
+    // Use unified cache key for both endpoints
+    const cacheKey = generateCacheKey(city, "data");
     const cachedData = crimeCache.get(cacheKey);
 
     if (cachedData) {
+      console.log(`📦 Serving cached crime data for ${city} (${cachedData.totalCount} crimes)`);
       return res.json({
         ...cachedData,
         fromCache: true,
         cacheTime: new Date().toISOString(),
+        cacheExpiresIn: Math.floor((crimeCache.getTtl(cacheKey) - Date.now()) / 1000), // seconds remaining
       });
     }
 
+    console.log(`🔄 Fetching fresh crime data for ${city} from newsdata.io`);
     const response = await axios.get("https://newsdata.io/api/1/latest", {
       params: {
         apikey: "pub_252fcf639348463bbe561344d8e4ce47",
@@ -282,16 +289,20 @@ router.get("/summary", async (req, res) => {
     const responseData = {
       success: true,
       data: crimeSummaries,
-      totalCount: crimeSummaries.length,
+      totalCount: crimeArticles.length,
       city: city,
       fromCache: false,
       fetchTime: new Date().toISOString(),
       link: crimeSummaries.map((item) => item.link),
     };
 
+    // Store in cache for 30 minutes - ALL users will get this data
     crimeCache.set(cacheKey, responseData);
+    console.log(`💾 Cached crime data for ${city} (${crimeArticles.length} crimes) - expires in 30 minutes`);
+    
     res.json(responseData);
   } catch (error) {
+    console.error("Error in crime summary:", error.message);
     res.status(500).json({
       success: false,
       error: "Failed to fetch crime summary",
@@ -317,18 +328,24 @@ router.get("/count", async (req, res) => {
       });
     }
 
-    const cacheKey = generateCacheKey(city, "summary");
+    // Use the SAME cache key as summary endpoint
+    const cacheKey = generateCacheKey(city, "data");
     const cachedData = crimeCache.get(cacheKey);
 
     if (cachedData) {
+      console.log(`📦 Serving cached crime count for ${city}: ${cachedData.totalCount} crimes`);
       return res.json({
         success: true,
         count: cachedData.totalCount || 0,
         city: city,
         fromCache: true,
         cacheTime: cachedData.fetchTime || new Date().toISOString(),
+        cacheExpiresIn: Math.floor((crimeCache.getTtl(cacheKey) - Date.now()) / 1000), // seconds remaining
       });
     }
+
+    // If no cache, fetch new data (same as summary endpoint)
+    console.log(`🔄 Fetching fresh crime count for ${city} from newsdata.io`);
     const response = await axios.get("https://newsdata.io/api/1/latest", {
       params: {
         apikey: "pub_252fcf639348463bbe561344d8e4ce47",
@@ -343,7 +360,6 @@ router.get("/count", async (req, res) => {
     const crimeArticles = articles.filter((article) =>
       isCrimeRelated(article.title, article.description)
     );
-
 
     const responseData = {
       success: true,
@@ -362,7 +378,9 @@ router.get("/count", async (req, res) => {
       fetchTime: new Date().toISOString(),
     };
 
+    // Store in cache for 30 minutes - ALL users will get this data
     crimeCache.set(cacheKey, responseData);
+    console.log(`💾 Cached crime count for ${city}: ${crimeArticles.length} crimes - expires in 30 minutes`);
 
     res.json({
       success: true,
@@ -371,7 +389,7 @@ router.get("/count", async (req, res) => {
       fromCache: false,
     });
   } catch (error) {
-    console.error("Error fetching crime count:", error.message);
+    console.error("Error in crime count:", error.message);
     res.status(500).json({
       success: false,
       error: "Failed to fetch crime count",

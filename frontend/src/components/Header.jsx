@@ -58,6 +58,8 @@ const Header = () => {
           <Link to='/home' className='text-gray-700 hover:text-blue-600 text-sm sm:text-base'>Home</Link>
           <Link to='/foundation' className='text-gray-700 hover:text-blue-600 text-sm sm:text-base'>The Foundation</Link>
           <Link to='/about' className='text-gray-700 hover:text-blue-600 text-sm sm:text-base'>About</Link>
+          //new
+          <Link to='/crime-news' className='text-gray-700 hover:text-blue-600 text-sm sm:text-base'>Crime News</Link>
           <Link to='/profile'>
             {currentUser ? (
               <img
@@ -87,6 +89,8 @@ const Header = () => {
             <Link to='/home' className='text-gray-700 hover:text-blue-600 text-sm'>Home</Link>
             <Link to='/foundation' className='text-gray-700 hover:text-blue-600 text-sm'>The Foundation</Link>
             <Link to='/about' className='text-gray-700 hover:text-blue-600 text-sm'>About</Link>
+            //new
+            <Link to='/crime-news' className='text-gray-700 hover:text-blue-600 text-sm'>Crime News</Link>
             <Link to='/profile'>
               {currentUser ? (
                 <img

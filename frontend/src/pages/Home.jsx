@@ -119,6 +119,25 @@ const Home = () => {
         <Link to="/foundation">
           <h1 className="text-center mt-10 text-red-400 text-3xl font-thin hover:underline ">NEXT  CHAPTER  THE FOUNDATION</h1>
         </Link>
+//new
+        {/* Crime News Section */}
+        <div className="max-w-6xl mx-auto p-4 mt-10">
+          <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg shadow-lg p-8 text-center">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="text-red-500 text-2xl">⚠️</div>
+              <h2 className="text-2xl font-bold text-slate-800">Stay Informed About Safety</h2>
+            </div>
+            <p className="text-slate-600 mb-6 max-w-2xl mx-auto">
+              Research crime data and safety information for any area. Make informed decisions about your next property with our comprehensive crime news and safety analysis.
+            </p>
+            <Link 
+              to="/crime-news" 
+              className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold"
+            >
+              🔍 Research Crime Data
+            </Link>
+          </div>
+        </div>
 
       </div >
     </>
