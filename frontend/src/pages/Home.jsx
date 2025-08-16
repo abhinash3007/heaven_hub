@@ -119,7 +119,7 @@ const Home = () => {
         <Link to="/foundation">
           <h1 className="text-center mt-10 text-red-400 text-3xl font-thin hover:underline ">NEXT  CHAPTER  THE FOUNDATION</h1>
         </Link>
-//new
+
         {/* Crime News Section */}
         <div className="max-w-6xl mx-auto p-4 mt-10">
           <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg shadow-lg p-8 text-center">
