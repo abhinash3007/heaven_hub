@@ -68,6 +68,7 @@ const Home = () => {
         {loading ? (
          <div className="text-center py-10 text-gray-500">Loading listings...</div>
         ) : (
+      <>
         <Swiper navigation className="my-8">
           {offerListing.length > 0 && offerListing.map((listing) => (
             <SwiperSlide key={listing._id}>
@@ -126,6 +127,7 @@ const Home = () => {
             </div>
           )}
         </div>
+        </>
         )}
 
         <Link to="/foundation">
