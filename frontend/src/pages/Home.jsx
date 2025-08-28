@@ -6,19 +6,24 @@ import { Navigation } from 'swiper/modules';
 import SwiperCore from 'swiper';
 import 'swiper/css/bundle';
 import ListingItem from '../components/ListingItem';
-
+SwiperCore.use([Navigation]);
 const Home = () => {
   const [offerListing, setOfferListing] = useState([]);
   const [rentListing, setRentListing] = useState([]);
   const [saleListing, setSaleListing] = useState([]);
-  SwiperCore.use([Navigation]);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
-      const offerRes = await fetch('https://heaven-hub-2.onrender.com/api/listing/get?offer=true&limit=4');
-      const rentRes = await fetch('https://heaven-hub-2.onrender.com/api/listing/get?type=rent&limit=4');
-      const saleRes = await fetch('https://heaven-hub-2.onrender.com/api/listing/get?type=sale&limit=4');
+        setLoading(true);
+      const [offerRes, rentRes, saleRes] = await Promise.all([
+        fetch('https://heaven-hub-2.onrender.com/api/listing/get?offer=true&limit=4'),
+        fetch('https://heaven-hub-2.onrender.com/api/listing/get?type=rent&limit=4'),
+        fetch('https://heaven-hub-2.onrender.com/api/listing/get?type=sale&limit=4'),
+      ]);
 
         const offers = await offerRes.json();
         const rents = await rentRes.json();
@@ -29,6 +34,9 @@ const Home = () => {
         setSaleListing(sales.listings || []);
       } catch (error) {
         console.log(error);
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -57,7 +65,9 @@ const Home = () => {
         </div>
 
 
-
+        {loading ? (
+         <div className="text-center py-10 text-gray-500">Loading listings...</div>
+        ) : (
         <Swiper navigation className="my-8">
           {offerListing.length > 0 && offerListing.map((listing) => (
             <SwiperSlide key={listing._id}>
@@ -65,6 +75,7 @@ const Home = () => {
                 src={listing.imageUrls[0]}
                 alt="listing-image"
                 className="w-full h-[588px] object-cover rounded-lg shadow-md"
+                loading="lazy"
               />
             </SwiperSlide>
           ))}
@@ -115,6 +126,7 @@ const Home = () => {
             </div>
           )}
         </div>
+        )}
 
         <Link to="/foundation">
           <h1 className="text-center mt-10 text-red-400 text-3xl font-thin hover:underline ">NEXT  CHAPTER  THE FOUNDATION</h1>
