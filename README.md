@@ -1,3 +1,6 @@
+<img width="947" height="414" alt="image" src="https://github.com/user-attachments/assets/cdee2962-b94b-44c8-817b-8d7b198aa72d" />
+
+
 # 🏡 Heaven Hub — Real Estate Platform with AI & Crime Intelligence
 
 A full-stack MERN real estate platform designed to help users discover properties with AI-generated descriptions, city-based crime intelligence, and interactive Mapbox maps for safer decision-making.
@@ -19,6 +22,9 @@ A full-stack MERN real estate platform designed to help users discover propertie
 - Protected routes and secure sessions.  
 
 ---
+
+
+
 
 ## 🛰️ 3. Crime Intelligence System (Unique Project Feature)
 - Fetches real-time crime news using Newsdata API.  
@@ -98,6 +104,27 @@ User searches
 - 8+ crimes → High Risk  
 
 ---
+## 📸 Screenshots
+
+### 🏠 Home Page
+<a href="https://github.com/user-attachments/assets/62cc38f0-0dd2-472c-abf1-ce1bf746371c" target="_blank">
+  <img src="https://github.com/user-attachments/assets/62cc38f0-0dd2-472c-abf1-ce1bf746371c" alt="Home Page" width="800"/>
+</a>
+
+
+
+
+### 🏢 Listing Describtion Page
+<img width="1521" height="2994" alt="heaven-hub-new vercel app_ (2)" src="https://github.com/user-attachments/assets/19d3a8a5-f045-4440-8262-4e69ba8ce961" />
+
+
+### 🏢 Crime News Page
+<img width="1521" height="2078" alt="heaven-hub-new vercel app_ (3)" src="https://github.com/user-attachments/assets/ba14f0fa-73c5-42fb-9fd2-d9f782a32b76" />
+
+
+
+
+
 
 # 🛠️ Installation
 
@@ -126,3 +153,7 @@ OPENAI_API_KEY=your_openai_key
 NEWSDATA_API_KEY=your_newsdata_key
 MAPBOX_TOKEN=your_mapbox_key
 FIREBASE_API_KEY=your_firebase_key
+
+
+
+
