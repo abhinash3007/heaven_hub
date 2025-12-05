@@ -16,6 +16,7 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState([]);
   const [showMore, setShowMore] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -52,7 +53,7 @@ const Search = () => {
       urlParams.set("limit", 6);
       const searchQuery = urlParams.toString();
       const res = await fetch(
-        `https://heaven-hub-2.onrender.com/api/listing/get?${searchQuery}`
+        `${API_URL}/listing/get?${searchQuery}`
       );
       const data = await res.json();
 
@@ -103,7 +104,7 @@ const Search = () => {
     urlParams.set("limit", 6);
     const searchQuery = urlParams.toString();
     const res = await fetch(
-      `https://heaven-hub-2.onrender.com/api/listing/get?${searchQuery}`
+      `${API_URL}/listing/get?${searchQuery}`
     );
     const data = await res.json();
     setShowMore(data.length === 6);

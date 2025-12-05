@@ -12,6 +12,7 @@ const CrimeNews = () => {
   const [error, setError] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("city");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const fetchCrimeNews = async (term = "", type = "city") => {
     setLoading(true);
@@ -20,8 +21,8 @@ const CrimeNews = () => {
     try {
       const param = type === "address" ? "address" : "city";
       const url = term
-        ? `https://heaven-hub-2.onrender.com/api/crime/summary?${param}=${encodeURIComponent(term)}`
-        : "https://heaven-hub-2.onrender.com/api/crime/summary";
+        ? `${API_URL}/crime/summary?${param}=${encodeURIComponent(term)}`
+        : `${API_URL}/crime/summary`;
 
       const res = await fetch(url);
       const data = await res.json();

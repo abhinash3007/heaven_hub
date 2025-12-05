@@ -44,13 +44,14 @@ export default function Listing() {
   const [lastCrimeUpdate, setLastCrimeUpdate] = useState(null);
   const mapContainer = useRef(null);
   const map = useRef(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchListing = async () => {
       try {
         setLoading(true);
         const res = await fetch(
-          `https://heaven-hub-2.onrender.com/api/listing/get/${params.listingId}`
+          `${API_URL}/listing/get/${params.listingId}`
         );
         const data = await res.json();
         if (data.success === false) {
@@ -178,7 +179,7 @@ export default function Listing() {
       setCrimeError(false);
 
       const countRes = await fetch(
-        `https://heaven-hub-2.onrender.com/api/crime/count?address=${encodeURIComponent(
+        `${API_URL}/crime/count?address=${encodeURIComponent(
           listing.address
         )}`
       );
@@ -191,7 +192,7 @@ export default function Listing() {
       }
 
       const summaryRes = await fetch(
-        `https://heaven-hub-2.onrender.com/api/crime/summary?address=${encodeURIComponent(
+        `${API_URL}/crime/summary?address=${encodeURIComponent(
           listing.address
         )}`
       );

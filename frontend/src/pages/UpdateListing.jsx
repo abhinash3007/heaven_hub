@@ -34,12 +34,13 @@ const UpdateListing = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchListing = async () => {
       const listingId = params.listingId;
       const res = await fetch(
-        `https://heaven-hub-2.onrender.com/api/listing/get/${listingId}`
+        `${API_URL}/listing/get/${listingId}`
       );
       const data = await res.json();
       if (data.success === false) {

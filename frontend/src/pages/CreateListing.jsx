@@ -31,6 +31,7 @@ const CreateListing = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const generateDescription = async () => {
     try {
@@ -52,7 +53,7 @@ const CreateListing = () => {
       };
 
       const res = await fetch(
-        "https://heaven-hub-2.onrender.com/api/ai/generate-description",
+        `${base}/ai/generate-description`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -171,7 +172,7 @@ const CreateListing = () => {
       setLoading(true);
       setError("");
       
-      const res = await fetch("https://heaven-hub-2.onrender.com/api/listing/create/", {
+      const res = await fetch(`${base}/listing/create/`, {
         method: "POST",
         credentials: "include",
         headers: {

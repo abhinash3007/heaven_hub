@@ -8,6 +8,7 @@ import Oath from '../components/Oath';
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { error, loading } = useSelector((state) => state.user);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ const SignIn = () => {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch(`https://heaven-hub-2.onrender.com/api/auth/signin`, {
+      const res = await fetch(`${API_URL}/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
