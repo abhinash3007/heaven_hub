@@ -8,7 +8,7 @@ const Foundation = () => {
             <div className="relative">
                 <img 
                     className='w-full h-[600px] object-bottom opacity-90' 
-                    src='https://mylisting365.co.uk/blog/wp-content/uploads/2014/09/realestateagentuk.jpg' 
+                    src="/foundation_5.jpg" 
                     alt="Hero Background"
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -42,10 +42,10 @@ const Foundation = () => {
 
             {/* Image Gallery */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-8 px-8 md:px-44 my-16'>
-                <img className='h-[400px] object-cover' src='https://c.wallhere.com/photos/6a/25/morning_autumn_trees_light_sun_sunlight_dawn_canal-537690.jpg!d' alt="Nature Image 1" />
-                <img className='h-[400px] object-cover' src='https://ft-docs.s3.amazonaws.com/en/wake-up-earlier.jpg' alt="Nature Image 2" />
-                <img className='h-[400px] object-cover' src='https://assets.agentfire3.com/uploads/sites/249/2021/03/Houston-Premium-Homes-Realty-Group-real-estate-agent-for-sale-broker-buyer.jpg' alt="Nature Image 3" />
-                <img className='h-[400px] object-cover' src='https://watermark.lovepik.com/photo/50083/4425.jpg_wh1200.jpg' alt="Nature Image 4" />
+                <img className='h-[400px] object-cover' src="/foundation_1.png" alt="Nature Image 1" />
+                <img className='h-[400px] object-cover' src="/foundation_2.jpg" alt="Nature Image 2" />
+                <img className='h-[400px] object-cover' src="/Foundation_3.webp" alt="Nature Image 3" />
+                <img className='h-[400px] object-cover' src="/foundation_4.jpg" alt="Nature Image 4" />
             </div>
 
             {/* Call to Action */}
